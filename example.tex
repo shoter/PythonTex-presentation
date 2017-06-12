@@ -11,7 +11,7 @@ dvipsnames
 \usepackage{polski} %For Polish language only
 \usepackage[T1]{fontenc}
 \usepackage{verbatim}
-\usepackage{pythontex}
+\usepackage[usefamily=bash]{pythontex}
 \usepackage{listings} %We want to put listings
 
 
@@ -24,8 +24,9 @@ dvipsnames
 \author{Damian Łączak}
 \date{}
 \institute[AGH]{
-Akademia Górniczo-Hutnicza \\
-Wydział Fizyki i Informatyki Stosowanej
+Edycja i prezentacja tekstów naukowych \\
+\pyc{import sys}
+Python: \py{sys.version}
 }
 %%%%%%%%%%% Configuration of the listings package %%%%%%%%%%%%%%%%%%%%%%%%%%
 % Source: https://en.wikibooks.org/wiki/LaTeX/Source_Code_Listings#Using_the_listings_package
@@ -429,7 +430,29 @@ print(a)
   
   \end{frame}
 
-\part{Python\TeX examples}
+
+\subsection{Other languages}
+\begin{frame}[fragile]{Other languages}
+  \begin{itemize}[<+->]
+  \item Ruby
+  \item Octave
+  \item Julia
+  \item Rust
+  \item Bash
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Bash}{Available commands and environments}
+  \begin{itemize}[<+->]
+  \item bash
+  \item bashblock
+  \item bashverbatim
+  \item bashsub
+  \end{itemize}
+\end{frame}
+
+
+\part{Python \TeX{}amples}
 
 \begin{frame}{Outline}
 	\tableofcontents[
@@ -442,11 +465,11 @@ print(a)
 	\onslide
 \end{frame}
 
-\section{charts}
+\section{Charts}
 \subsection{source code}
-\subsection{result}
-\begin{frame}[fragile]{Wykres}{}
-\begin{pycode}
+\begin{frame}[fragile]{Chart}{Matplotlib}
+\begin{lstlisting}[language=python]
+\begin{pycode}[chart]
 from pylab import *
 def f(t):
     return cos(2 * pi * t) * exp(-t)
@@ -462,25 +485,130 @@ xlabel("czas (s)")
 ylabel("napiecie (mV)")
 savefig("myplot.png", bbox_inches="tight")
 print(r"\begin{center}")
-print(r"\includegraphics[scale=0.7, keepaspectratio]{myplot.png}")
+print(r"\includegraphics[scale=1.0, keepaspectratio]{myplot.png}")
+print(r"\end{center}")
+\end{pycode}
+\end{lstlisting}
+\end{frame}
+\subsection{result}
+\begin{frame}[fragile]{Chart}{File is saved to main folder by default}
+\begin{pycode}[chart]
+from pylab import *
+def f(t):
+    return cos(2 * pi * t) * exp(-t)
+t = linspace(0, 5, 500)
+y = f(t)
+clf()
+figure(figsize=(5, 3))
+rc("text", usetex=True)
+plot(t, y)
+title("Przykladowy wykres")
+text(3, 0.15, r"$y = \cos(2 \pi t) e^{-t}$")
+xlabel("czas (s)")
+ylabel("napiecie (mV)")
+savefig("myplot.png", bbox_inches="tight")
+print(r"\begin{center}")
+print(r"\includegraphics[scale=1.0, keepaspectratio]{myplot.png}")
 print(r"\end{center}")
 \end{pycode}
 \end{frame}
-  
+
+
+\section{Internet data}
+\subsection{source code}
+\begin{frame}[fragile]{GPW}{Using another session to improve speed of pythontex.}
+\begin{lstlisting}[language=python]
+\begin{pycode}[internet]
+from internet import getSymbolInfo
+import time
+
+wig20 = getSymbolInfo("WIG20")
+kghm = getSymbolInfo("KGHM")
+cd = getSymbolInfo("CDPROJEKT")
+date = time.strftime("%Y/%m/%d");
+\end{pycode}
+
+\begin{exampleblock}{KGHM}
+Current price: \py[internet]{wig20} PLN
+\end{exampleblock}
+
+\end{lstlisting}
+\end{frame}
+\subsection{result}
+\begin{frame}[fragile]{GPW}{Because it's funny to know current prices of stock.}
+\begin{pycode}[internet]
+from internet import getSymbolInfo
+import time
+
+wig20 = getSymbolInfo("WIG20")
+kghm = getSymbolInfo("KGHM")
+cd = getSymbolInfo("CDPROJEKT")
+date = time.strftime("%Y/%m/%d");
+\end{pycode}
+
+
+\begin{exampleblock}{KGHM}
+Current price: \py[internet]{wig20} PLN
+\end{exampleblock}
+
+\begin{exampleblock}{WIG20}
+Current price: \py[internet]{kghm} PLN
+\end{exampleblock}
+
+\begin{exampleblock}{CDPROJEKT}
+Current price: \py[internet]{cd} PLN
+\end{exampleblock}
+
+Actual price for date: \py[internet]{date}.
+
+\onslide
+\end{frame}
+
+\section{Dynamic tables}
+\subsection{source code}
+\begin{frame}[fragile]{External files}
+\begin{lstlisting}[language=python]
+\begin{pycode}[people]
+from people import importPeople
+people = importPeople()	
+
+print(r"\begin{tabular}{ l | r }")
+
+print(r"{0} & {1} \\ \hline".format(people[0][0], people[0][1]))
+people.pop(0)
+for person in people:
+	print(r"{0} & {1} \\".format(person[0], person[1]))
+	
+print(r"\end{tabular}")
+\end{pycode}
+
+\end{lstlisting}
+\end{frame}
+\subsection{result}
+\begin{frame}[fragile]{External files}{The biggest hassle of creating tables is finally diminished.}
+\begin{exampleblock}{List of people}
+\begin{pycode}[people]
+from people import importPeople
+people = importPeople()	
+print(r"\begin{tabular}{ l | r }")
+print(r"{0} & {1} \\ \hline".format(people[0][0], people[0][1]))
+people.pop(0)
+for person in people:
+	print(r"{0} & {1} \\".format(person[0], person[1]))
+print(r"\end{tabular}")
+\end{pycode}
+\end{exampleblock}
+
+\onslide
+\end{frame}
+
 \appendix
 \begin{frame}[allowframebreaks]{Bibliography}
   \begin{thebibliography}{9}
     \setbeamertemplate{bibliography item}[online]
-      \bibitem{wikibook}{Wikibooks \newblock \LaTeX/Source Code Listings \newblock \url{https://en.wikibooks.org/wiki/LaTeX/Source_Code_Listings}}
-    \setbeamertemplate{bibliography item}[book]
-      \bibitem{lamport}{Leslie Lamport \newblock LATEX: a document preparation system : user's guide and reference manual \newblock Addison-Wesley Pub. Co., 1994 }
-    \setbeamertemplate{bibliography item}[article]
-      \bibitem{article1}{Author \newblock Title of the article\newblock Editor, year \newblock Notes}
-    \setbeamertemplate{bibliography item}[triangle]
-      \bibitem{article2}{Author \newblock Title of the article\newblock Editor, year \newblock Notes}
-    \setbeamertemplate{bibliography item}[text]
-      \bibitem{article3}{Author \newblock Title of the article\newblock Editor, year \newblock Notes}
-      \bibitem[Polak98]{article4}{Author \newblock Title of the article\newblock Editor, year \newblock Notes}
+      \bibitem{wikibook}{CTAN \newblock Python\TeX \hspace{1pt} Package documentation \newblock \url{http://piotrkosoft.net/pub/mirrors/CTAN/macros/latex/contrib/pythontex/pythontex.pdf}}
+      \setbeamertemplate{bibliography item}[online]
+      \bibitem{wikibook}{CTAN \newblock Beamer user guide \newblock \url{http://mirrors.ctan.org/macros/latex/contrib/beamer/doc/beameruserguide.pdf}}
   \end{thebibliography}
 \end{frame}
 \end{document}

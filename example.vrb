@@ -1,20 +1,15 @@
-\frametitle{Wykres}\framesubtitle {}
-\begin{pycode}
-from pylab import *
-def f(t):
-    return cos(2 * pi * t) * exp(-t)
-t = linspace(0, 5, 500)
-y = f(t)
-clf()
-figure(figsize=(5, 3))
-rc("text", usetex=True)
-plot(t, y)
-title("Przykladowy wykres")
-text(3, 0.15, r"$y = \cos(2 \pi t) e^{-t}$")
-xlabel("czas (s)")
-ylabel("napiecie (mV)")
-savefig("myplot.png", bbox_inches="tight")
+\frametitle{External files}\framesubtitle {The biggest hassle of creating tables is finally diminished.}
+\begin{exampleblock}{List of people}
+\begin{pycode}[people]
+from people import importPeople
+people = importPeople()
+print(r"\begin{tabular}{ l | r }")
+print(r"{0} & {1} \\ \hline".format(people[0][0], people[0][1]))
+people.pop(0)
+for person in people:
+	print(r"{0} & {1} \\".format(person[0], person[1]))
+print(r"\end{tabular}")
 \end{pycode}
-\begin{center}
-\includegraphics[scale=0.7, keepaspectratio]{myplot.png}
-\end{center}
+\end{exampleblock}
+
+\onslide
