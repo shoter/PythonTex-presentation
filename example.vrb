@@ -1,0 +1,20 @@
+\frametitle{Wykres}\framesubtitle {}
+\begin{pycode}
+from pylab import *
+def f(t):
+    return cos(2 * pi * t) * exp(-t)
+t = linspace(0, 5, 500)
+y = f(t)
+clf()
+figure(figsize=(5, 3))
+rc("text", usetex=True)
+plot(t, y)
+title("Przykladowy wykres")
+text(3, 0.15, r"$y = \cos(2 \pi t) e^{-t}$")
+xlabel("czas (s)")
+ylabel("napiecie (mV)")
+savefig("myplot.png", bbox_inches="tight")
+\end{pycode}
+\begin{center}
+\includegraphics[scale=0.7, keepaspectratio]{myplot.png}
+\end{center}
